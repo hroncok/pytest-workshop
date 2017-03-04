@@ -2,9 +2,12 @@ import pytest
 
 from fizzbuzz import fizzbuzz
 
-@pytest.fixture(params=(5, 25, 50, 70))
+@pytest.fixture(params=(5, 25, 50, 70),
+                scope='module')
 def numbuzz(request):
-    return request.param
+    print('Creating fixture num={}'.format(request.param))
+    yield request.param
+    print('Cleaning fixture num={}'.format(request.param))
 
 #@pytest.fixture(params=('sqlite', 'postgres')
 #def db(request):
