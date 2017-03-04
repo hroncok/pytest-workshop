@@ -21,10 +21,13 @@ def test_format_includes_author(status):
     assert status['user']['screen_name'] in format(status)
 
 
+@pytest.fixture
+def session():
+    key, secret = credentials()
+    return twitter_session(key, secret)
+
 
 @pytest.mark.parametrize('term', ('installfest', 'linuxdays'))
-def test_search_results_include_term(term):
-    key, secret = credentials()
-    session = twitter_session(key, secret)
+def test_search_results_contain_something(session, term):
     results = search(session, term)
     assert len(results) > 5
