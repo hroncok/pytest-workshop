@@ -37,6 +37,8 @@ def search(session, q, since_id=1):
     r = session.get('https://api.twitter.com/1.1/search/tweets.json',
                     params={'q': q, 'since_id': since_id})
     r.raise_for_status()
+    import sys
+    sys.stderr.write(r.text)
     return r.json()['statuses']
 
 
