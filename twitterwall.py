@@ -37,8 +37,6 @@ def search(session, q, since_id=1):
     r = session.get('https://api.twitter.com/1.1/search/tweets.json',
                     params={'q': q, 'since_id': since_id})
     r.raise_for_status()
-    import sys
-    sys.stderr.write(r.text)
     return r.json()['statuses']
 
 
@@ -97,15 +95,20 @@ def format(status):
     return '{}: {}'.format(author, text)
 
 
+def credentials(inipath=os.path.expanduser('~/.twitter.ini')):
+    config = configparser.ConfigParser()
+    config.read(inipath)
+    key = config['auth']['key']
+    secret = config['auth']['secret']
+    return key, secret
+
+
 @click.command()
 @click.option('--sleep', default=3, help='Sleep duration between API calls.')
 @click.option('--query', prompt='Search', help='What to search for.')
 def main(sleep, query):
     """Twitter wall for console"""
-    config = configparser.ConfigParser()
-    config.read(os.path.expanduser('~/.twitter.ini'))
-    key = config['auth']['key']
-    secret = config['auth']['secret']
+    key, secret = credentials()
 
     try:
         session = twitter_session(key, secret)
