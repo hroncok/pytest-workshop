@@ -17,5 +17,5 @@ def status(request):
     }
 
 
-def test_format_startswith_author(status):
-    assert format(status).startswith(status['user']['screen_name'])
+def test_format_includes_author(status):
+    assert status['user']['screen_name'] in format(status)
